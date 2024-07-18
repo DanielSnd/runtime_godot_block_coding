@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://bk2argmujy0kk"]
+
+[ext_resource type="Script" path="res://block_code_system/control_block.gd" id="1_2hbir"]
+[ext_resource type="PackedScene" uid="uid://df56qh4vhkmvw" path="res://block_code_system/scenes/snap_point.tscn" id="3_nhryi"]
+
+[node name="control" type="MarginContainer"]
+custom_minimum_size = Vector2(72, 30)
+size_flags_horizontal = 0
+script = ExtResource("1_2hbir")
+block_name = "control_block"
+label = "Control Block"
+color = Color(0.59979, 0.536348, 0.876215, 1)
+bottom_snap_path = NodePath("vbc/snap")
+
+[node name="vbc" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="mc" type="MarginContainer" parent="vbc"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="vbc/mc"]
+layout_mode = 2
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Background" type="ColorRect" parent="vbc/mc/MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+color = Color(0.59979, 0.536348, 0.876215, 1)
+
+[node name="rows" type="VBoxContainer" parent="vbc/mc"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 0
+
+[node name="snap" parent="vbc" instance=ExtResource("3_nhryi")]
+layout_mode = 2

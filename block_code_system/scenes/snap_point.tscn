@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://df56qh4vhkmvw"]
+
+[ext_resource type="Script" path="res://block_code_system/snap_point_ui.gd" id="1_w32kt"]
+
+[node name="snap" type="MarginContainer"]
+script = ExtResource("1_w32kt")

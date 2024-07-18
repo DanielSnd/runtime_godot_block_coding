@@ -1,0 +1,56 @@
+[gd_scene load_steps=5 format=3 uid="uid://nwuqyt5a6n5r"]
+
+[ext_resource type="Script" path="res://block_code_system/statement_block.gd" id="1_35s2q"]
+[ext_resource type="Script" path="res://block_code_system/block_bg_ui.gd" id="2_on3e2"]
+[ext_resource type="PackedScene" uid="uid://cbkvsexl62edt" path="res://block_code_system/scenes/drag_drop_area.tscn" id="3_ip1du"]
+[ext_resource type="PackedScene" uid="uid://df56qh4vhkmvw" path="res://block_code_system/scenes/snap_point.tscn" id="4_e8vkq"]
+
+[node name="statement" type="MarginContainer"]
+custom_minimum_size = Vector2(72, 30)
+offset_right = 72.0
+offset_bottom = 40.0
+size_flags_horizontal = 0
+script = ExtResource("1_35s2q")
+block_name = "statement_block"
+label = "StatementBlock"
+bottom_snap_path = NodePath("vbc/snap")
+
+[node name="vbc" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="topmargin" type="MarginContainer" parent="vbc"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Background" type="Control" parent="vbc/topmargin"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_on3e2")
+color = Color(1, 1, 1, 1)
+
+[node name="DragDropArea" parent="vbc/topmargin" instance=ExtResource("3_ip1du")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="mc" type="MarginContainer" parent="vbc/topmargin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="hbox" type="HBoxContainer" parent="vbc/topmargin/mc"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="snap" parent="vbc" instance=ExtResource("4_e8vkq")]
+unique_name_in_owner = true
+layout_mode = 2

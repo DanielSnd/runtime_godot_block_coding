@@ -1,0 +1,35 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="RuntimeBlockCode"
+run/main_scene="res://maincoding.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+App="*res://app.gd"
+
+[display]
+
+window/stretch/mode="canvas_items"
+
+[shader_globals]
+
+cam_pos_zoom={
+"type": "vec3",
+"value": Vector3(412, 412, 1)
+}
+screen_res={
+"type": "vec2",
+"value": Vector2(3080, 2080)
+}

@@ -1,0 +1,145 @@
+[gd_scene load_steps=10 format=3 uid="uid://cdeowslubbegh"]
+
+[ext_resource type="Shader" path="res://block_code_system/coding_background.gdshader" id="1_1s2tp"]
+[ext_resource type="Script" path="res://camera_drag.gd" id="1_kk07e"]
+[ext_resource type="Script" path="res://block_code_system/block_system_editor.gd" id="2_q66tv"]
+[ext_resource type="PackedScene" uid="uid://dlabt3bgmpna2" path="res://block_code_system/scenes/block_picker.tscn" id="3_s7u6x"]
+[ext_resource type="Script" path="res://block_code_system/drag_manager.gd" id="4_fgdc1"]
+[ext_resource type="PackedScene" uid="uid://bkxbt0d5e0c6t" path="res://block_code_system/scenes/block_canvas.tscn" id="4_irpal"]
+[ext_resource type="Texture2D" uid="uid://dmuxtlnkn6egl" path="res://block_code_system/icons/save.png" id="6_2huqf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t7agk"]
+shader = ExtResource("1_1s2tp")
+shader_parameter/subdivisions = 5.0
+shader_parameter/grid_width = 0.01
+shader_parameter/background_color = Color(0.156675, 0.156675, 0.156675, 1)
+shader_parameter/background_color_two = Color(0.183591, 0.18359, 0.18359, 1)
+shader_parameter/grid_color = Color(0.394987, 0.394987, 0.394987, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.01
+shader_parameter/point_color = Color(0.57902, 0.57902, 0.57902, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.60933, 0.60933, 0.60933, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oplki"]
+bg_color = Color(0.0626098, 0.0591454, 0.0642876, 0.74902)
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+
+[node name="Main" type="Node2D"]
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="CanvasLayer2"]
+material = SubResource("ShaderMaterial_t7agk")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="camera" type="Camera2D" parent="."]
+position = Vector2(570, 326)
+script = ExtResource("1_kk07e")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="BlockSystemEditor" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_q66tv")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/BlockSystemEditor"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer"]
+layout_mode = 2
+
+[node name="ScriptVBox" type="VBoxContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PickerSplit" type="HSplitContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BlockPicker" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit" instance=ExtResource("3_s7u6x")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer"]
+layout_mode = 2
+
+[node name="BlockCanvas" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer/VBoxContainer" instance=ExtResource("4_irpal")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BottomBarPanel" type="Panel" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_oplki")
+
+[node name="BottomBar" type="HBoxContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer/VBoxContainer/BottomBarPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CollapseButton" type="Button" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer/VBoxContainer/BottomBarPanel/BottomBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 26)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+icon_alignment = 1
+expand_icon = true
+
+[node name="SaveButton" type="Button" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer/VBoxContainer/BottomBarPanel/BottomBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 26)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+icon = ExtResource("6_2huqf")
+icon_alignment = 1
+expand_icon = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer/VBoxContainer/BottomBarPanel/BottomBar"]
+layout_mode = 2
+
+[node name="DragManager" type="Control" parent="CanvasLayer"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_fgdc1")
+picker_path = NodePath("../BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/BlockPicker")
+block_canvas_path = NodePath("../BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer/VBoxContainer/BlockCanvas")

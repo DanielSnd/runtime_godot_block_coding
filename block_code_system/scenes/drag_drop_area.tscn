@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cbkvsexl62edt"]
+
+[ext_resource type="Script" path="res://block_code_system/drag_drop_area.gd" id="1_ka0wl"]
+
+[node name="DragDropArea" type="MarginContainer"]
+script = ExtResource("1_ka0wl")

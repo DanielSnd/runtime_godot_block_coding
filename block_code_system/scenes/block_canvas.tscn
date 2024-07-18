@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://bkxbt0d5e0c6t"]
+
+[ext_resource type="Script" path="res://block_code_system/block_canvas.gd" id="1_f4pqr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kahq8"]
+bg_color = Color(0, 0, 0, 0.00784314)
+
+[node name="BlockCanvas" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_f4pqr")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kahq8")
+
+[node name="WindowContainer" type="Control" parent="."]
+clip_contents = true
+layout_mode = 2
+
+[node name="Window" type="Control" parent="WindowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+size_flags_horizontal = 3
+mouse_filter = 1
+
+[node name="Overlay" type="Control" parent="WindowContainer"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1152.0
+offset_top = -648.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="WindowContainer/Overlay"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="ZoomLabel" type="Label" parent="WindowContainer/Overlay/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.196078)
+theme_override_font_sizes/font_size = 24
+text = "1x"
+horizontal_alignment = 2
+
+[node name="MouseOverride" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
