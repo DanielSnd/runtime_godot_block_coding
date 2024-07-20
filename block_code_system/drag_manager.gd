@@ -99,7 +99,7 @@ class Drag:
 	func _place_block():
 		var canvas_rect: Rect2 = _block_canvas.get_global_rect()
 
-		var position = _block.global_position - canvas_rect.position
+		var block_position = _block.global_position - canvas_rect.position
 
 		remove_child(_block)
 
@@ -111,7 +111,7 @@ class Drag:
 				_block_canvas.arrange_block(orphaned_block, snap_block)
 		else:
 			# Block goes on screen somewhere
-			_block_canvas.add_block(_block, position)
+			_block_canvas.add_block(_block, block_position)
 
 		target_snap_point = null
 
@@ -161,7 +161,7 @@ class Drag:
 				continue
 			elif closest_snap_point == null or distance < closest_distance:
 				closest_snap_point = snap_point
-				closest_distance = distance
+				closest_distance = int(roundi(distance))
 		return closest_snap_point
 
 	func _get_top_block_for_node(node: Node) -> Block:
@@ -246,6 +246,7 @@ func drag_block(block: Block, copied_from: Block = null):
 	add_child(drag)
 
 func copy_block(block: Block) -> Block:
+	print("Copy block ",block)
 	if block.has_meta("block_type"):
 		var new_block_copy = BlockCategoryFactory.instantiate_block_type(block.get_meta("block_type",""))
 		block.copy_block_info_to(new_block_copy)
@@ -253,6 +254,7 @@ func copy_block(block: Block) -> Block:
 	return null
 
 func copy_picked_block_and_drag(block: Block):
+	print("Copy block ",block)
 	var new_block: Block = copy_block(block)
 	if new_block != null:
 		drag_block(new_block, block)

@@ -24,6 +24,7 @@ const VARIANT_TYPE_TO_STRING: Dictionary = {
 	TYPE_VECTOR2: "VECTOR2",
 	TYPE_COLOR: "COLOR",
 	TYPE_NODE_PATH: "NODE_PATH",
+	TYPE_MAX: "VARIANT",
 	TYPE_NIL: "NIL",
 }
 
@@ -35,6 +36,7 @@ const STRING_TO_VARIANT_TYPE: Dictionary = {
 	"VECTOR2": TYPE_VECTOR2,
 	"COLOR": TYPE_COLOR,
 	"NODE_PATH": TYPE_NODE_PATH,
+	"VARIANT": TYPE_MAX,
 	"NIL": TYPE_NIL,
 }
 
@@ -44,6 +46,7 @@ const cast_relationships = [
 	[TYPE_INT, TYPE_STRING, "str(%s)"],
 	[TYPE_FLOAT, TYPE_STRING, "str(%s)"],
 	[TYPE_COLOR, TYPE_STRING, "str(%s)"],
+	[TYPE_MAX, TYPE_STRING, "str(%s)"],
 ]
 
 # Directed graph, edges are CastGraphEdge
@@ -153,6 +156,7 @@ class PriorityQueue:
 		data.append([element, priority])
 		_sort()
 
+	@warning_ignore("standalone_expression")
 	func _sort():
 		data.sort_custom(func(a, b): a[1] < b[1])
 

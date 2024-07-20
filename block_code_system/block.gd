@@ -2,7 +2,9 @@ class_name Block
 extends MarginContainer
 
 signal drag_started(block: Block)
+@warning_ignore("unused_signal")
 signal modified
+var block_execute_callable:Callable
 
 @export var block_format: Variant = ""
 ## Name of the block to be referenced by others in search
@@ -37,6 +39,7 @@ func copy_block_info_to(to_block:Block):
 	to_block.tooltip_text = tooltip_text
 	to_block.color = color
 	to_block.block_format = block_format
+	to_block.block_execute_callable = block_execute_callable
 	for i in get_meta_list():
 		to_block.set_meta(i, get_meta(i))
 

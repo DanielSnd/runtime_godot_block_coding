@@ -1,48 +1,108 @@
-[gd_scene load_steps=3 format=3 uid="uid://duhpwtfo3k0sk"]
+[gd_scene load_steps=10 format=3 uid="uid://duhpwtfo3k0sk"]
 
 [ext_resource type="Script" path="res://block_code_system/block_category_display.gd" id="1_wkdht"]
-[ext_resource type="Script" path="res://block_code_system/margin_container_ui_press_helper.gd" id="2_7hdbt"]
+[ext_resource type="Texture2D" uid="uid://35arkfalnyd" path="res://block_code_system/icons/down.png" id="2_h6vcm"]
+
+[sub_resource type="SystemFont" id="SystemFont_hu71j"]
+font_names = PackedStringArray("Sans-Serif")
+generate_mipmaps = true
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="FontVariation" id="FontVariation_l7nme"]
+base_font = SubResource("SystemFont_hu71j")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wj0k4"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.00392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qcnwk"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.00392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nculk"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.00392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ghg1x"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.00392157)
+border_width_bottom = 2
+border_color = Color(0.907941, 0.907942, 0.907942, 0.176471)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7tl2j"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.00392157)
 
 [node name="BlockCategoryDisplay" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -918.0
-offset_bottom = -246.0
+offset_bottom = -609.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_bottom = 40
 script = ExtResource("1_wkdht")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-
-[node name="Panel" type="PanelContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(230, 0)
-layout_mode = 2
-
-[node name="PanelContainer" type="MarginContainer" parent="VBoxContainer/Panel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_bottom = 4
-script = ExtResource("2_7hdbt")
-
-[node name="Label" type="Label" parent="VBoxContainer/Panel/PanelContainer"]
+[node name="Background" type="ColorRect" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 1
-theme_override_font_sizes/font_size = 18
-text = "Example Category"
+color = Color(0.432731, 0.348976, 0.532802, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
 
-[node name="Blocks" type="VBoxContainer" parent="VBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/icon_normal_color = Color(0.807843, 0.807843, 0.807843, 0.803922)
+theme_override_constants/icon_max_width = 18
+theme_override_constants/align_to_largest_stylebox = 1
+theme_override_fonts/font = SubResource("FontVariation_l7nme")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxFlat_wj0k4")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_qcnwk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_nculk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ghg1x")
+theme_override_styles/normal = SubResource("StyleBoxFlat_7tl2j")
+toggle_mode = true
+text = "Example Category"
+icon = ExtResource("2_h6vcm")
+alignment = 0
+icon_alignment = 2
+expand_icon = true
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 18
+
+[node name="Blocks" type="YVBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 14

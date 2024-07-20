@@ -94,16 +94,16 @@ func get_serialized_props() -> Array:
 	var props := super()
 	props.append_array(serialize_props(["statements", "defaults"]))
 
-	var _param_input_strings_array = []
+	var _other_param_input_strings_array = []
 	for param_name_input_pairs in param_name_input_pairs_array:
 		var _param_input_strings: Dictionary = {}
 
 		for pair in param_name_input_pairs:
 			_param_input_strings[pair[0]] = pair[1].get_raw_input()
 
-		_param_input_strings_array.append(_param_input_strings)
+		_other_param_input_strings_array.append(_param_input_strings)
 
-	props.append(["pinput_array", _param_input_strings_array])
+	props.append(["pinput_array", _other_param_input_strings_array])
 	return props
 
 
@@ -118,6 +118,8 @@ static func get_scene_path():
 func format():
 	snaps = []
 	param_name_input_pairs_array = []
+	if (not block_format is Array):
+		block_format = [block_format]
 	if (not block_format is Array) or block_format.is_empty():
 		return
 
@@ -164,7 +166,7 @@ func format():
 		var snap_container := MarginContainer.new()
 		snap_container.name = "snap%d" % i
 		snap_container.custom_minimum_size.y = 30
-		snap_container.add_theme_constant_override("margin_left", BlockConstants.CONTROL_MARGIN)
+		snap_container.add_theme_constant_override("margin_left", roundi(BlockConstants.CONTROL_MARGIN))
 
 		var snap_point: SnapPoint = preload("res://block_code_system/scenes/snap_point.tscn").instantiate()
 		snap_container.add_child(snap_point)
@@ -173,11 +175,11 @@ func format():
 
 		%rows.add_child(snap_container)
 
-	var bg := Control.new()
-	bg.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	bg.custom_minimum_size.x = 100
-	bg.custom_minimum_size.y = 30
-	bg.set_script(preload("res://block_code_system/block_bg_ui.gd"))
-	bg.color = color
-	bg.shift_top = BlockConstants.CONTROL_MARGIN
-	%rows.add_child(bg)
+	var _bg := Control.new()
+	_bg.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_bg.custom_minimum_size.x = 100
+	_bg.custom_minimum_size.y = 30
+	_bg.set_script(preload("res://block_code_system/block_bg_ui.gd"))
+	_bg.color = color
+	_bg.shift_top = BlockConstants.CONTROL_MARGIN
+	%rows.add_child(_bg)

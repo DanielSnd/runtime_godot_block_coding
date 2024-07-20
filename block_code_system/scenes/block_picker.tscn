@@ -8,6 +8,7 @@ bg_color = Color(0.0666667, 0.0666667, 0.0666667, 0.858824)
 [node name="Picker" type="MarginContainer"]
 offset_right = 251.0
 offset_bottom = 253.0
+size_flags_horizontal = 3
 script = ExtResource("1_tkt44")
 
 [node name="Panel" type="Panel" parent="."]
@@ -42,8 +43,8 @@ theme_override_constants/separation = 4
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 4
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 1
 theme_override_constants/margin_bottom = 12
 
 [node name="BlockScroll" type="ScrollContainer" parent="WidgetContainer/BlockMarginContainer"]
@@ -56,4 +57,5 @@ horizontal_scroll_mode = 3
 [node name="BlockList" type="VBoxContainer" parent="WidgetContainer/BlockMarginContainer/BlockScroll"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = -22
+size_flags_horizontal = 3
+theme_override_constants/separation = 0

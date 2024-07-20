@@ -5,7 +5,7 @@ extends Block
 @export var defaults: Dictionary = {}
 
 @onready var _background := %Background
-@onready var _hbox := %hbox
+#@onready var _hbox := %hbox
 
 var param_name_input_pairs: Array
 
@@ -27,17 +27,17 @@ func props_to_serialize() -> Array:
 	if not pinput.is_empty():
 		props_super.push_back("pinput")
 	return props_super
-	
+
 func copy_block_info_to(to_block:Block):
 	super(to_block)
 	if to_block is StatementBlock:
 		to_block.statement = statement
 		to_block.defaults = defaults.duplicate()
-	
+
 func _ready():
 	super()
 	%DragDropArea.mouse_down.connect(_on_drag_drop_area_mouse_down)
-	
+
 	if block_type != BlockConstants.BlockType.EXECUTE:
 		_background.show_top = false
 	_background.color = color
@@ -57,11 +57,11 @@ func get_serialized_props() -> Array:
 	var props := super()
 	props.append_array(serialize_props(["block_format", "statement", "defaults"]))
 
-	var _param_input_strings: Dictionary = {}
+	var _other_param_input_strings: Dictionary = {}
 	for pair in param_name_input_pairs:
-		_param_input_strings[pair[0]] = pair[1].get_raw_input()
+		_other_param_input_strings[pair[0]] = pair[1].get_raw_input()
 
-	props.append(["param_input_strings", _param_input_strings])
+	props.append(["param_input_strings", _other_param_input_strings])
 	return props
 
 
@@ -95,10 +95,8 @@ func get_instruction_node() -> BlockInstructionTree.BlockTreeNode:
 
 	return root
 
-
 func format():
 	param_name_input_pairs = format_string(self, %hbox, block_format, defaults)
-
 
 static func format_string(parent_block: Block, attach_to: Node, string: String, _defaults: Dictionary) -> Array:
 	var _param_name_input_pairs = []
@@ -110,10 +108,10 @@ static func format_string(parent_block: Block, attach_to: Node, string: String, 
 	for result in results:
 		var label_text := string.substr(start, result.get_start() - start)
 		if label_text != "":
-			var label = Label.new()
-			label.add_theme_color_override("font_color", Color.WHITE)
-			label.text = label_text
-			attach_to.add_child(label)
+			var _label = Label.new()
+			_label.add_theme_color_override("font_color", Color.WHITE)
+			_label.text = label_text
+			attach_to.add_child(_label)
 
 		var param := result.get_string()
 		var copy_block: bool = param[0] == "["
@@ -134,7 +132,7 @@ static func format_string(parent_block: Block, attach_to: Node, string: String, 
 		if _defaults.has(param_name):
 			param_default = _defaults[param_name]
 
-		var param_node: Node
+		#var param_node: Node
 
 		if copy_block:
 			var parameter_output: ParameterOutput = load("res://block_code_system/scenes/parameter_output.tscn").instantiate()
@@ -144,10 +142,14 @@ static func format_string(parent_block: Block, attach_to: Node, string: String, 
 				"statement": param_name,
 				"variant_type": param_type,
 				"color": parent_block.color,
+				"parent_id" : parent_block.get_meta("id",""),
 				"scope": parent_block.get_entry_statement() if parent_block is EntryBlock else ""
 			}
 			parameter_output.block = parent_block
 			attach_to.add_child(parameter_output)
+			print("Attach to ",attach_to," parent block ",parent_block," parent block id ",parent_block.get_meta("id",""))
+			#parent_block.set_meta("id", "parameter_out")
+			#parent_block.set_meta("dont_save",true)
 		else:
 			var parameter_input: ParameterInput = load("res://block_code_system/scenes/parameter_input.tscn").instantiate()
 			parameter_input.name = "pinp_%d" % start  # Unique path
@@ -166,11 +168,11 @@ static func format_string(parent_block: Block, attach_to: Node, string: String, 
 
 		start = result.get_end()
 
-	var label_text := string.substr(start)
-	if label_text != "":
-		var label = Label.new()
-		label.add_theme_color_override("font_color", Color.WHITE)
-		label.text = label_text
-		attach_to.add_child(label)
+	var _label_text := string.substr(start)
+	if _label_text != "":
+		var other_label = Label.new()
+		other_label.add_theme_color_override("font_color", Color.WHITE)
+		other_label.text = _label_text
+		attach_to.add_child(other_label)
 
 	return _param_name_input_pairs

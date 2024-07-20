@@ -146,13 +146,15 @@ func _update_visible_input():
 			_:
 				_switch_input(_text_input)
 
-
 func _switch_input(node: Node):
 	for c in _input_switcher.get_children():
 		c.visible = false
 
-	if node:
+	if node != null:
 		node.visible = true
+		_panel.visible = true
+	else:
+		_panel.visible = false
 
 
 func _on_color_input_color_changed(color):

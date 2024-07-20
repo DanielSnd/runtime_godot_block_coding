@@ -12,7 +12,10 @@ const ZOOM_FACTOR: float = 1.1
 @onready var _mouse_override: Control = %MouseOverride
 @onready var _zoom_label: Label = %ZoomLabel
 
-var block_infos_dictionary = {}
+var block_infos_dictionary:
+	get: return BlockSystemInterpreter.block_infos_dict
+	set(v):
+		BlockSystemInterpreter.block_infos_dict = v
 var _current_bsd: BlockScriptData
 var _panning := false
 var _zooming := false
@@ -29,7 +32,7 @@ var window_position:Vector2:
 var zoom: float:
 	set(value):
 		_window.scale = Vector2(value, value)
-		RenderingServer.global_shader_parameter_set("screen_res", get_viewport_rect().size * lerp(1.8,0.3,inverse_lerp(_min_zoom, _max_zoom, zoom)))
+		RenderingServer.global_shader_parameter_set("screen_res", get_viewport_rect().size * lerp(1.8,0.45,inverse_lerp(_min_zoom, _max_zoom, zoom)))
 		_zoom_label.text = "%.1fx" % value
 	get:
 		return _window.scale.x
@@ -51,11 +54,11 @@ func _ready():
 		#_block_scenes_by_class[_class.class] = _script.get_scene_path()
 
 
-func add_block(block: Block, position: Vector2 = Vector2.ZERO) -> void:
+func add_block(block: Block, block_position: Vector2 = Vector2.ZERO) -> void:
 	if block is EntryBlock:
-		block.position = canvas_to_window(position).snapped(SNAP_GRID)
+		block.position = canvas_to_window(block_position).snapped(SNAP_GRID)
 	else:
-		block.position = canvas_to_window(position)
+		block.position = canvas_to_window(block_position)
 
 	_window.add_child(block)
 
@@ -84,23 +87,24 @@ func set_child(n: Node):
 #
 func bsd_selected(bsd: BlockScriptData):
 	clear_canvas()
-	
+
 	window_position = Vector2(0, 0)
 	zoom = 1
 
 	_window.visible = false
 	_zoom_label.visible = false
-	
+
 	if bsd != null:
 		_window.visible = true
 		_zoom_label.visible = true
+		BlockSystemInterpreter.current_block_tree = bsd.block_trees
 		load_tree(_window, bsd.block_trees)
-		
+
 		if bsd != _current_bsd:
 			reset_window_position()
-	
+
 	_current_bsd = bsd
-	
+
 	#_choose_block_code_label.visible = false
 	#_create_block_code_label.visible = false
 #
@@ -125,8 +129,11 @@ func clear_canvas():
 		child.queue_free()
 
 func load_tree(parent: Node, block_info: Array):
-	#print("Loading tree. Parent ",parent," block info ",block_info)
 	if not block_info.is_empty():
+		if block_info[0] is String and block_info[0] == "variables":
+			BlockSystemInterpreter.variables_data = block_info[1]
+			BlockCategoryFactory.get_variable_blocks(block_info[1],BlockSystemInterpreter.block_infos_dict,false)
+			return
 		if block_info[0] is Array:
 			#print("Block info[0] is array ",block_info[0])
 			for i in block_info:
@@ -134,16 +141,17 @@ func load_tree(parent: Node, block_info: Array):
 		elif block_info[0] is String:
 			#print("Block info[0] is string ",block_info[0])
 			var scene:Block = BlockCategoryFactory.instantiate_block_from_dictionary(block_infos_dictionary, block_info[0]) as Block
-			if block_info.size() > 2 and block_info[2] is Dictionary:
-				for prop_key in block_info[2].keys():
-					scene.set(prop_key, block_info[2][prop_key])
-			parent.add_child(scene)
-			reconnect_block.emit(scene)
-			
-			if block_info.size() > 1 and block_info[1] is Array:
-				for block_connects in block_info[1]:
-					if block_connects is Array and block_connects.size() > 1:
-						load_tree(scene.get_node(block_connects[0]), block_connects[1])
+			if scene != null and parent != null:
+				if block_info.size() > 2 and block_info[2] is Dictionary:
+					for prop_key in block_info[2].keys():
+						scene.set(prop_key, block_info[2][prop_key])
+				parent.add_child(scene)
+				reconnect_block.emit(scene)
+
+				if block_info.size() > 1 and block_info[1] is Array:
+					for block_connects in block_info[1]:
+						if block_connects is Array and block_connects.size() > 1:
+							load_tree(scene.get_node_or_null(block_connects[0]), block_connects[1])
 
 	#if block_info[0] == "root":
 		#for root_child in block_info[1]:
@@ -169,16 +177,28 @@ func get_canvas_block_trees() -> Array:
 	return block_trees
 
 func build_tree(block: Block) -> Array:
+	if block.has_meta("dont_save") or (not block.has_meta("id")):
+		return []
 	var n = [block.get_meta("id"),[],{}]
-	
+
 	#n.serialized_block = SerializedBlock.new(block.get_block_class(), block.get_serialized_props())
 	for i in block.props_to_serialize():
 		n[2][i] = block.get(i)
 
 	for snap in find_snaps(block):
-		for c in snap.get_children():
-			if c is Block:  # Make sure to not include preview
-				n[1].append([block.get_path_to(snap), build_tree(c)])
+		if snap.get_child_count() == 0:
+			n[1].push_back([])
+		else:
+			for c in snap.get_children():
+				if c is Block:  # Make sure to not include preview
+					if c.has_meta("dont_save"):
+						n[1].push_back([])
+					else:
+						var build_child_tree = build_tree(c)
+						if build_child_tree.is_empty():
+							n[1].push_back([])
+						else:
+							n[1].push_back([block.get_path_to(snap), build_child_tree])
 	return n
 
 func find_snaps(node: Node) -> Array:
@@ -231,12 +251,12 @@ func _input(event):
 				_zooming = true
 			else:
 				_zooming = false
-				
+
 		if event.button_index == MOUSE_BUTTON_MIDDLE:
 			set_mouse_override(event.pressed)
 
 		var relative_mouse_pos := get_global_mouse_position() - get_global_rect().position
-		
+
 		if is_mouse_over():
 			var old_mouse_window_pos := canvas_to_window(relative_mouse_pos)
 			if event.button_index == MOUSE_BUTTON_WHEEL_UP and zoom < _max_zoom:
@@ -248,7 +268,7 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		if (Input.is_key_pressed(KEY_SHIFT) and _panning) or (Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE) and _panning):
 			window_position += event.relative
-			
+
 		if Input.is_key_pressed(KEY_SHIFT) and _zooming:
 			var relative_mouse_pos := get_global_mouse_position() - get_global_rect().position
 			var old_mouse_window_pos := canvas_to_window(relative_mouse_pos)

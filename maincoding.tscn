@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cdeowslubbegh"]
+[gd_scene load_steps=11 format=3 uid="uid://cdeowslubbegh"]
 
 [ext_resource type="Shader" path="res://block_code_system/coding_background.gdshader" id="1_1s2tp"]
 [ext_resource type="Script" path="res://camera_drag.gd" id="1_kk07e"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://block_code_system/drag_manager.gd" id="4_fgdc1"]
 [ext_resource type="PackedScene" uid="uid://bkxbt0d5e0c6t" path="res://block_code_system/scenes/block_canvas.tscn" id="4_irpal"]
 [ext_resource type="Texture2D" uid="uid://dmuxtlnkn6egl" path="res://block_code_system/icons/save.png" id="6_2huqf"]
+[ext_resource type="Texture2D" uid="uid://dpyl07uqfuxll" path="res://block_code_system/icons/open.png" id="7_ev4iv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t7agk"]
 shader = ExtResource("1_1s2tp")
@@ -86,6 +87,7 @@ layout_mode = 2
 [node name="BlockPicker" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit" instance=ExtResource("3_s7u6x")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_stretch_ratio = 0.28
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit"]
 layout_mode = 2
@@ -125,6 +127,15 @@ custom_minimum_size = Vector2(20, 26)
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 icon = ExtResource("6_2huqf")
+icon_alignment = 1
+expand_icon = true
+
+[node name="PlayButton" type="Button" parent="CanvasLayer/BlockSystemEditor/MarginContainer/HBoxContainer/ScriptVBox/MarginContainer/PickerSplit/MarginContainer/VBoxContainer/BottomBarPanel/BottomBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 26)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+icon = ExtResource("7_ev4iv")
 icon_alignment = 1
 expand_icon = true
 

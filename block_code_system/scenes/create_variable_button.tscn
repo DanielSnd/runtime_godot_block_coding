@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpjuxy5fwskru"]
+
+[ext_resource type="Script" path="res://block_code_system/create_variable_button.gd" id="1_lchyf"]
+[ext_resource type="PackedScene" uid="uid://mybk5ube2msp" path="res://block_code_system/scenes/create_variable_dialog.tscn" id="2_0c16k"]
+
+[node name="CreateVariableButton" type="MarginContainer"]
+script = ExtResource("1_lchyf")
+
+[node name="CreateVariable" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Create new variable"
+
+[node name="CreateVariableDialog" parent="." instance=ExtResource("2_0c16k")]
+unique_name_in_owner = true
+visible = false
