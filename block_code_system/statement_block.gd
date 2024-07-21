@@ -52,48 +52,12 @@ func _ready():
 func _on_drag_drop_area_mouse_down():
 	_drag_started()
 
-
-func get_serialized_props() -> Array:
-	var props := super()
-	props.append_array(serialize_props(["block_format", "statement", "defaults"]))
-
-	var _other_param_input_strings: Dictionary = {}
-	for pair in param_name_input_pairs:
-		_other_param_input_strings[pair[0]] = pair[1].get_raw_input()
-
-	props.append(["param_input_strings", _other_param_input_strings])
-	return props
-
-
 static func get_block_class():
 	return "StatementBlock"
 
 
 static func get_scene_path():
 	return "res://block_code_system/scenes/statement_block.tscn"
-
- #Override this method to create custom block functionality
-func get_instruction_node() -> BlockInstructionTree.BlockTreeNode:
-	var formatted_statement := statement
-
-	for pair in param_name_input_pairs:
-		formatted_statement = formatted_statement.replace("{%s}" % pair[0], pair[1].get_string())
-
-	var statement_lines := formatted_statement.split("\n")
-
-	var root: BlockInstructionTree.BlockTreeNode = BlockInstructionTree.BlockTreeNode.new(statement_lines[0])
-	var node := root
-
-	for i in range(1, statement_lines.size()):
-		node.next = BlockInstructionTree.BlockTreeNode.new(statement_lines[i])
-		node = node.next
-
-	if bottom_snap:
-		var snapped_block: Block = bottom_snap.get_snapped_block()
-		if snapped_block:
-			node.next = snapped_block.get_instruction_node()
-
-	return root
 
 func format():
 	param_name_input_pairs = format_string(self, %hbox, block_format, defaults)

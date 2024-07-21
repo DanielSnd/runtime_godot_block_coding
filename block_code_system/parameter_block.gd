@@ -81,18 +81,6 @@ func props_to_serialize() -> Array:
 		props_super.push_back("poutput")
 	return props_super
 
-func get_serialized_props() -> Array:
-	var props := super()
-	props.append_array(serialize_props(["block_format", "statement", "defaults", "variant_type"]))
-
-	var new_param_input_strings: Dictionary = {}
-	for pair in param_name_input_pairs:
-		new_param_input_strings[pair[0]] = pair[1].get_raw_input()
-
-	props.append(["param_input_strings", new_param_input_strings])
-
-	return props
-
 # Override this method to create custom parameter functionality
 func get_parameter_string() -> String:
 	var formatted_statement := statement

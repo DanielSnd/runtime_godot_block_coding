@@ -24,9 +24,3 @@ func get_entry_statement() -> String:
 		formatted_statement = formatted_statement.replace("{%s}" % pair[0], pair[1].get_string())
 
 	return formatted_statement
-
-
-func get_serialized_props() -> Array:
-	var props := super()
-	props.append_array(serialize_props(["signal_name"]))
-	return props

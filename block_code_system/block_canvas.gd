@@ -181,7 +181,6 @@ func build_tree(block: Block) -> Array:
 		return []
 	var n = [block.get_meta("id"),[],{}]
 
-	#n.serialized_block = SerializedBlock.new(block.get_block_class(), block.get_serialized_props())
 	for i in block.props_to_serialize():
 		n[2][i] = block.get(i)
 
