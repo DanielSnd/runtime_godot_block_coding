@@ -130,9 +130,12 @@ class Drag:
 			# We only snap to the same block type:
 			return false
 
-		if _block.block_type == BlockConstants.BlockType.VALUE and not BlockConstants.can_cast(_block.variant_type, _snap_point.variant_type):
-			# We only snap Value blocks to snaps that can cast to same variant:
-			return false
+		if _block.block_type == BlockConstants.BlockType.VALUE:
+			if not _snap_point.custom_type.is_empty():
+				return _block.custom_type == _snap_point.custom_type
+			if not BlockConstants.can_cast(_block.variant_type, _snap_point.variant_type):
+				# We only snap Value blocks to snaps that can cast to same variant:
+				return false
 
 		# Check if any parent node is this node
 		if _snap_point.is_ancestor_of(_block):
@@ -246,7 +249,6 @@ func drag_block(block: Block, copied_from: Block = null):
 	add_child(drag)
 
 func copy_block(block: Block) -> Block:
-	print("Copy block ",block)
 	if block.has_meta("block_type"):
 		var new_block_copy = BlockCategoryFactory.instantiate_block_type(block.get_meta("block_type",""))
 		block.copy_block_info_to(new_block_copy)
@@ -254,7 +256,6 @@ func copy_block(block: Block) -> Block:
 	return null
 
 func copy_picked_block_and_drag(block: Block):
-	print("Copy block ",block)
 	var new_block: Block = copy_block(block)
 	if new_block != null:
 		drag_block(new_block, block)

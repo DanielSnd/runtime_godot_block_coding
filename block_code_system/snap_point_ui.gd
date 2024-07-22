@@ -16,6 +16,7 @@ extends MarginContainer
 
 ## When block_type is [enum Types.BlockType.VALUE], the type of the value that can be used at this snap point.
 @export var variant_type: Variant.Type
+var custom_type:String = ""
 
 @warning_ignore("unused_signal")
 signal drag_started(block: Block)

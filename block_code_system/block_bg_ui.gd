@@ -17,6 +17,9 @@ var outline_color: Color
 @export var show_top: bool = true:
 	set = _set_show_top
 
+@export var show_bottom: bool = true:
+	set = _set_show_bottom
+
 ## Horizontally shift the top knob
 @export var shift_top: float = 0.0:
 	set = _set_shift_top
@@ -36,6 +39,9 @@ func _set_show_top(new_show_top):
 	show_top = new_show_top
 	queue_redraw()
 
+func _set_show_bottom(new_show_bottom):
+	show_bottom = new_show_bottom
+	queue_redraw()
 
 func _set_shift_top(new_shift_top):
 	shift_top = new_shift_top
@@ -58,10 +64,11 @@ func _draw():
 
 	fill_polygon.append(Vector2(size.x, 0.0))
 	fill_polygon.append(Vector2(size.x, size.y))
-	fill_polygon.append(Vector2(KNOB_X + KNOB_Z * 2 + KNOB_W + shift_bottom, size.y))
-	fill_polygon.append(Vector2(KNOB_X + KNOB_Z + KNOB_W + shift_bottom, size.y + KNOB_H))
-	fill_polygon.append(Vector2(KNOB_X + KNOB_Z + shift_bottom, size.y + KNOB_H))
-	fill_polygon.append(Vector2(KNOB_X + shift_bottom, size.y))
+	if show_bottom:
+		fill_polygon.append(Vector2(KNOB_X + KNOB_Z * 2 + KNOB_W + shift_bottom, size.y))
+		fill_polygon.append(Vector2(KNOB_X + KNOB_Z + KNOB_W + shift_bottom, size.y + KNOB_H))
+		fill_polygon.append(Vector2(KNOB_X + KNOB_Z + shift_bottom, size.y + KNOB_H))
+		fill_polygon.append(Vector2(KNOB_X + shift_bottom, size.y))
 	fill_polygon.append(Vector2(0.0, size.y))
 	fill_polygon.append(Vector2(0.0, 0.0))
 
@@ -75,10 +82,11 @@ func _draw():
 
 	stroke_polygon.append(Vector2(size.x, 0.0))
 	stroke_polygon.append(Vector2(size.x, size.y))
-	stroke_polygon.append(Vector2(KNOB_X + KNOB_Z * 2 + KNOB_W + shift_bottom, size.y))
-	stroke_polygon.append(Vector2(KNOB_X + KNOB_Z + KNOB_W + shift_bottom, size.y + KNOB_H))
-	stroke_polygon.append(Vector2(KNOB_X + KNOB_Z + shift_bottom, size.y + KNOB_H))
-	stroke_polygon.append(Vector2(KNOB_X + shift_bottom, size.y))
+	if show_bottom:
+		stroke_polygon.append(Vector2(KNOB_X + KNOB_Z * 2 + KNOB_W + shift_bottom, size.y))
+		stroke_polygon.append(Vector2(KNOB_X + KNOB_Z + KNOB_W + shift_bottom, size.y + KNOB_H))
+		stroke_polygon.append(Vector2(KNOB_X + KNOB_Z + shift_bottom, size.y + KNOB_H))
+		stroke_polygon.append(Vector2(KNOB_X + shift_bottom, size.y))
 
 	stroke_polygon.append(Vector2(shift_bottom, size.y))
 	if shift_top + shift_bottom == 0:

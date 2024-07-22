@@ -41,7 +41,6 @@ float grid(vec2 uv, vec2 lineWidth,bool check) {
 		invertLine.y ? 1.0 - lineWidth.y : lineWidth.y
 		);
 
-
 	vec2 lineAA = uvDeriv * 1.5;
 	vec2 gridUV = abs((fract(uv)) * 2.0 - 1.0);
 

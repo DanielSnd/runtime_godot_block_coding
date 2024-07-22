@@ -53,7 +53,6 @@ const cast_relationships = [
 static var cast_graph: Dictionary
 
 
-
 class CastGraphEdge:
 	var to: Variant.Type
 	var cast_format: String
@@ -115,6 +114,8 @@ static func dijkstra(source: Variant.Type):
 
 
 static func can_cast(type: Variant.Type, parent_type: Variant.Type) -> bool:
+	if parent_type == TYPE_MAX:
+		return true
 	if type == parent_type:
 		return true
 
@@ -127,7 +128,15 @@ static func can_cast(type: Variant.Type, parent_type: Variant.Type) -> bool:
 static func cast(val: String, type: Variant.Type, parent_type: Variant.Type):
 	if type == parent_type:
 		return val
-
+	if parent_type == TYPE_MAX:
+		if type == TYPE_BOOL:
+			return bool(val as bool)
+		if type == TYPE_INT:
+			return int(str(val).to_int()) as int
+		if type == TYPE_FLOAT:
+			return float(str(val).to_float()) as float
+		if type == TYPE_STRING:
+			return str(val) as String
 	if cast_graph.has(type) and cast_graph.has(parent_type):
 		dijkstra(type)
 		if dist[parent_type] < INT_MAX:

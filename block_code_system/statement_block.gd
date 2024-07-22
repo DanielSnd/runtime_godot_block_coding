@@ -1,3 +1,4 @@
+@icon("res://block_code_system/icons/gear.png")
 class_name StatementBlock
 extends Block
 
@@ -87,8 +88,21 @@ static func format_string(parent_block: Block, attach_to: Node, string: String, 
 
 		var param_type = null
 		var option := false
+		var custom := false
 		if param_type_str == "OPTION":  # Easy way to specify dropdown option
 			option = true
+		elif param_type_str.begins_with("CUSTOM_"):  # Easy way to specify dropdown option
+			custom = true
+			param_type = TYPE_MAX
+			param_type_str = param_type_str.replace("CUSTOM_","")
+		elif param_type_str.begins_with("CUSTOMOPTION_"):
+			custom = true
+			option = true
+			param_type = TYPE_MAX
+			param_type_str = param_type_str.replace("CUSTOMOPTION_","")
+		#elif not BlockConstants.STRING_TO_VARIANT_TYPE.has(param_type_str):
+			#custom = true
+			#param_type = TYPE_MAX
 		else:
 			param_type = BlockConstants.STRING_TO_VARIANT_TYPE[param_type_str]
 
@@ -109,25 +123,40 @@ static func format_string(parent_block: Block, attach_to: Node, string: String, 
 				"parent_id" : parent_block.get_meta("id",""),
 				"scope": parent_block.get_entry_statement() if parent_block is EntryBlock else ""
 			}
+			if custom:
+				parameter_output.block_params["custom_type"] = param_type_str
+				if "custom_type" in attach_to:
+					attach_to.custom_type = param_type_str
 			parameter_output.block = parent_block
 			attach_to.add_child(parameter_output)
-			print("Attach to ",attach_to," parent block ",parent_block," parent block id ",parent_block.get_meta("id",""))
+			#print("Attach to ",attach_to," parent block ",parent_block," parent block id ",parent_block.get_meta("id",""))
 			#parent_block.set_meta("id", "parameter_out")
 			#parent_block.set_meta("dont_save",true)
 		else:
 			var parameter_input: ParameterInput = load("res://block_code_system/scenes/parameter_input.tscn").instantiate()
 			parameter_input.name = "pinp_%d" % start  # Unique path
 			parameter_input.placeholder = param_name
+
 			if param_type != null:
 				parameter_input.variant_type = param_type
-			elif option:
+			if option:
 				parameter_input.option = true
+				parameter_input.set_meta("input_id",param_name if BlockSystemInterpreter.enum_datas.has(param_name) else param_type_str)
 			parameter_input.modified.connect(func(): parent_block.modified.emit())
-
+			if custom:
+				parameter_input.custom_type = param_type_str
+				if "custom_type" in attach_to:
+					attach_to.custom_type = param_type_str
 			attach_to.add_child(parameter_input)
+			parameter_input._option_input.set("theme_override_colors/font_color", (parent_block.color as Color).darkened(0.58))
 			if param_default:
-				parameter_input.set_raw_input(param_default)
-#
+				if option:
+					parameter_input.set_raw_input(param_default)
+				else:
+					parameter_input.set_raw_input(param_default)
+			elif option:
+				parameter_input.set_raw_input(0)
+
 			_param_name_input_pairs.append([param_name, parameter_input])
 
 		start = result.get_end()

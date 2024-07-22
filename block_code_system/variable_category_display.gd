@@ -16,5 +16,4 @@ func _ready():
 	create_variable_button.create_variable.connect(_on_create_variable)
 
 func _on_create_variable(var_name, var_type):
-	print(var_name)
 	variable_created.emit([var_name, BlockConstants.STRING_TO_VARIANT_TYPE[var_type]])

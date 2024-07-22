@@ -1,3 +1,4 @@
+@icon("res://block_code_system/icons/gear.png")
 class_name ParameterInput
 extends MarginContainer
 
@@ -7,6 +8,7 @@ signal modified
 	set = _set_placeholder
 
 @export var variant_type: Variant.Type = TYPE_STRING
+@export var custom_type:String = ""
 @export var block_type: BlockConstants.BlockType = BlockConstants.BlockType.VALUE
 var option: bool = false
 
@@ -21,7 +23,7 @@ var option: bool = false
 # Color
 @onready var _color_input := %ColorInput
 # Option Dropdown
-@onready var _option_input := %OptionInput
+@onready var _option_input :OptionButton= %OptionInput
 # Vector2
 @onready var _vector2_input := %Vector2Input
 @onready var _x_line_edit := %XLineEdit
@@ -33,13 +35,14 @@ var option: bool = false
 
 func set_raw_input(raw_input):
 	if option:
-		_panel.visible = false
+		if _panel != null:
+			_panel.visible = false
 		_option_input.clear()
-		var option_data: Array = raw_input as Array
-		for item in option_data[1]:
-			_option_input.add_item(item.capitalize())
-		_option_input.select(option_data[0])
-
+		var option_items :Dictionary = BlockSystemInterpreter.enum_datas.get(get_meta("input_id",""),{})
+		for item in option_items.keys():
+			_option_input.add_item(item.capitalize(),option_items[item])
+		if raw_input is int:
+			_option_input.select(raw_input)
 		return
 
 	match variant_type:
@@ -53,15 +56,12 @@ func set_raw_input(raw_input):
 		TYPE_BOOL:
 			_bool_input_option.select(raw_input)
 		_:
-			_line_edit.text = raw_input
+			_line_edit.text = str(raw_input)
 
 
 func get_raw_input():
 	if option:
-		var options: Array = []
-		for i in _option_input.item_count:
-			options.append(_option_input.get_item_text(i).to_snake_case())
-		return [_option_input.selected, options]
+		return _option_input.selected
 
 	match variant_type:
 		TYPE_COLOR:
@@ -92,6 +92,7 @@ func _ready():
 
 	snap_point.block_type = block_type
 	snap_point.variant_type = variant_type
+	snap_point.custom_type = custom_type
 
 	_update_visible_input()
 
@@ -153,6 +154,8 @@ func _switch_input(node: Node):
 	if node != null:
 		node.visible = true
 		_panel.visible = true
+		if node is OptionButton:
+			_panel.visible = false
 	else:
 		_panel.visible = false
 

@@ -1,3 +1,4 @@
+@icon("res://block_code_system/icons/gear.png")
 class_name ParameterOutput
 extends MarginContainer
 

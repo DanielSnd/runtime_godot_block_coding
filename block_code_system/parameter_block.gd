@@ -1,8 +1,10 @@
+@icon("res://block_code_system/icons/gear.png")
 class_name ParameterBlock
 extends Block
 
 @export var statement: String = ""
 @export var variant_type: Variant.Type
+@export var custom_type:String = ""
 @export var defaults: Dictionary = {}
 
 @onready var _panel := $Panel
@@ -24,10 +26,11 @@ var poutput: Dictionary = {}:
 					var outputs = from_block_info.get("outputs",{})
 					if not statement.is_empty(): variant_type = outputs.get(statement,0)
 					category = from_block_info.get("category","Utility")
-					var category_props = BlockCategoryFactory.BUILTIN_PROPS.get(category,{})
-					for prop_key in category_props.keys():
-						if prop_key in self:
-							set(prop_key,category_props[prop_key])
+					var category_props:BlockCategory = BlockSystemInterpreter.block_categories.get(category,null)
+					if category_props != null:
+						color = category_props.color
+					else:
+						color = Color.DIM_GRAY
 
 var _param_input_strings: Dictionary = {}
 var pinput: Dictionary:
@@ -51,6 +54,7 @@ func copy_block_info_to(to_block:Block):
 	if to_block is ParameterBlock:
 		to_block.statement = statement
 		to_block.variant_type = variant_type
+		to_block.custom_type = custom_type
 		to_block._param_input_strings = _param_input_strings
 		to_block.defaults = defaults.duplicate()
 
@@ -67,7 +71,7 @@ func _ready():
 
 	if not _param_input_strings.is_empty():
 		for pair in param_name_input_pairs:
-			pair[1].set_raw_input(_param_input_strings[pair[0]])
+			pair[1].set_raw_input(_param_input_strings.get(pair[0],""))
 
 
 func _on_drag_drop_area_mouse_down():

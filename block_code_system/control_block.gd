@@ -1,3 +1,4 @@
+@icon("res://block_code_system/icons/gear.png")
 class_name ControlBlock
 extends Block
 
@@ -108,9 +109,9 @@ func format():
 		row_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row_hbox_container.add_child(row_hbox)
 
-		param_name_input_pairs_array.append(StatementBlock.format_string(self, row_hbox, block_format[i], defaults))
-
 		%rows.add_child(row)
+
+		param_name_input_pairs_array.append(StatementBlock.format_string(self, row_hbox, block_format[i], defaults))
 
 		var snap_container := MarginContainer.new()
 		snap_container.name = "snap%d" % i

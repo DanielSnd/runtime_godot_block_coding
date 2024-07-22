@@ -12,6 +12,7 @@ extends Control
 @onready var _icon_collapse := preload("res://block_code_system/icons/backward.png")
 @onready var _icon_expand := preload("res://block_code_system/icons/forward.png")
 
+static var override_save_path:String = ""
 var current_editing_block_script:BlockScriptData = null
 var _collapsed: bool = false
 
@@ -19,12 +20,14 @@ var current_block_script_variables:Dictionary = {}
 
 func play():
 	var block_tree := _block_canvas.get_canvas_block_trees()
+	BlockSystemInterpreter.current_block_tree = block_tree
 	var ready_block = BlockSystemInterpreter.find_entry_block_with_type(block_tree, "ready_block")
 	if not ready_block.is_empty():
 		BlockSystemInterpreter.get_callable_from_block_array(ready_block)[1].call(ready_block, current_block_script_variables)
 
 ## Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	RenderingServer.global_shader_parameter_set("screen_res", get_viewport_rect().size)
 	play_button.pressed.connect(play)
 	_picker.block_picked.connect(_drag_manager.copy_picked_block_and_drag)
 	_block_canvas.reconnect_block.connect(_drag_manager.connect_block_canvas_signals)
@@ -35,7 +38,7 @@ func _ready() -> void:
 	#_drag_manager.block_modified.connect(save_script)
 	await get_tree().process_frame
 	if current_editing_block_script == null:
-		if not load_script("user://tree_test.blocktree"):
+		if not load_script("user://tree_test.blocktree" if override_save_path.is_empty() else override_save_path):
 			current_editing_block_script = BlockScriptData.new([])
 
 	switch_script(current_editing_block_script)
@@ -54,10 +57,10 @@ func save_script():
 	var block_trees_to_save := _block_canvas.get_canvas_block_trees()
 	block_trees_to_save.push_front(["variables",BlockSystemInterpreter.variables_data])
 	var save_bytes = var_to_json_str(block_trees_to_save)
-	var file_path = "user://tree_test.blocktree"
+	var file_path = "user://tree_test.blocktree" if override_save_path.is_empty() else override_save_path
 	if FileAccess.file_exists(file_path):
 		DirAccess.remove_absolute(file_path)
-	var file_write = FileAccess.open("user://tree_test.blocktree",FileAccess.WRITE)
+	var file_write = FileAccess.open(file_path,FileAccess.WRITE)
 	file_write.store_string(save_bytes)
 	file_write.close()
 
